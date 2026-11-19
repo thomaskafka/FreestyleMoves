@@ -1,0 +1,731 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#050505">
+<link rel="manifest" href="manifest.json">
+<title>FreestyleMoves</title>
+<style>
+:root{--bg:#050505;--card:#111111;--card2:#1d1d1d;--line:#303030;--tx:#f5f7ff;--mut:#a3a3a3;--acc:#fff200;--pink:#fff200;--cy:#fff200;--warn:#ff9f1c;--disp:"Avenir Next Condensed","Arial Narrow","Helvetica Neue",system-ui,sans-serif}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;color:var(--tx);font:16px/1.45 "Avenir Next","Helvetica Neue",system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
+ background:radial-gradient(800px 420px at 95% -8%,#fff20014,transparent 70%),radial-gradient(700px 400px at -10% 8%,#fff2000a,transparent 70%),var(--bg);background-attachment:fixed}
+main{max-width:560px;margin:0 auto;padding:16px}
+h1,h2,.trick,.big,.logo,button,.tag,.letters b{font-family:var(--disp);font-style:italic;text-transform:uppercase;letter-spacing:.6px}
+h1{font-size:30px;font-weight:900;margin:8px 0 2px;line-height:1}
+h2{font-size:20px;font-weight:800;margin:18px 0 8px;color:var(--pink);text-shadow:0 0 14px #fff20044}
+p{margin:6px 0}.mut{color:var(--mut)}.small{font-size:14px}
+.hero{margin:6px 0 4px;position:relative;padding:10px 0 6px}
+.logo{font-size:52px;font-weight:900;line-height:.92;transform:skewX(-6deg);color:#fff;text-shadow:0 0 20px #ffffff33}
+.logo b{display:block;color:var(--acc);text-shadow:0 0 24px #fff20066;font-size:64px}
+.hero:after{content:"";display:block;height:5px;width:140px;margin-top:10px;background:repeating-linear-gradient(115deg,#ff2e88 0 10px,transparent 10px 16px)}
+.card{background:linear-gradient(180deg,#181818,#0e0e0e);border:1px solid var(--line);border-radius:18px;padding:16px;margin:12px 0;box-shadow:0 10px 30px #0006}
+button,.btn{font-size:16px;font-weight:900;border:0;padding:14px 18px;background:var(--card2);color:var(--tx);cursor:pointer;width:100%;display:block;text-align:center;text-decoration:none;
+ clip-path:polygon(12px 0,100% 0,calc(100% - 12px) 100%,0 100%);transition:filter .15s,transform .1s}
+button:hover{filter:brightness(1.15)}button:active{transform:scale(.98)}button:disabled{opacity:.35}
+.pri,.ok{background:linear-gradient(135deg,#fffa80,var(--acc));color:#141200}
+.bad{background:linear-gradient(135deg,#34343a,#242428);color:#fff200}
+.row{display:flex;gap:10px}.row>*{flex:1}
+.stack>*+*{margin-top:10px}
+.lvl{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.lvl button{padding:12px 16px;text-align:left;text-transform:none;font-style:normal}
+.lvl button b{font-family:var(--disp);font-style:italic;text-transform:uppercase;font-size:20px;display:block}
+.lvl button small{display:block;font-weight:500;color:var(--mut);font-size:12px}
+.lvl button.sel{background:linear-gradient(135deg,#fffa80,var(--pink));color:#141200}.lvl button.sel small{color:#3d3a00}
+input[type=text]{font:inherit;width:100%;padding:12px;border-radius:12px;border:2px solid var(--line);background:#0a0a0a;color:var(--tx)}
+input[type=text]:focus{outline:0;border-color:var(--pink)}
+.letters{display:flex;gap:6px}.letters b{width:34px;height:34px;display:grid;place-items:center;background:var(--card2);color:#4b516a;transform:skewX(-10deg);border-radius:6px;font-weight:900}
+.letters b.on{background:var(--pink);color:#141200;box-shadow:0 0 14px #fff20088}
+.player{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;border-radius:12px}
+.player.cur{background:var(--card2);box-shadow:inset 3px 0 0 var(--pink)}.player.out{opacity:.35;text-decoration:line-through}
+.trick{font-size:28px;font-weight:900;line-height:1.1;margin:10px 0}
+.tag{display:inline-block;font-size:12px;font-weight:900;padding:3px 10px;background:var(--pink);color:#141200;transform:skewX(-10deg);border-radius:3px}
+.tag.w{background:var(--warn)}
+.safety{border-left:4px solid var(--warn);background:#2a1a08;padding:10px 12px;border-radius:8px;font-size:14px;margin:8px 0}
+details{background:var(--card2);border-radius:14px;padding:10px 14px;margin-top:10px;border:1px solid var(--line)}
+summary{font-weight:700;cursor:pointer}
+details[open]{border-color:#555555}
+.top{display:flex;justify-content:space-between;align-items:center}
+.top button{width:auto;padding:8px 18px;font-size:14px}
+.nav{display:flex;gap:8px;margin:12px 0}.nav button{padding:10px;font-size:14px}.nav button.sel{background:linear-gradient(135deg,#fffa80,var(--pink));color:#141200}
+.big{font-size:60px;font-weight:900;text-align:center;background:linear-gradient(90deg,var(--acc),var(--cy));-webkit-background-clip:text;background-clip:text;color:transparent;line-height:1.1}
+video{width:100%;border-radius:12px;margin-top:8px}
+.vid{margin-top:8px;font-size:14px;color:var(--mut);font-style:italic}
+.anim svg{width:100%;height:auto;display:block;border-radius:14px;margin-top:8px;border:1px solid var(--line);
+ background:radial-gradient(ellipse at 50% 100%,#2e2a00 0,#0a0a0a 70%)}
+.anim .cap{font-size:14px;color:var(--pink);margin:8px 0 4px;min-height:20px;font-weight:700}
+.anim .chips{display:flex;gap:4px;margin:4px 0}
+.anim .chips i{flex:1;height:4px;border-radius:2px;background:var(--line)}
+.anim .chips i.on{background:var(--pink);box-shadow:0 0 8px #fff20088}
+.anim .ctr{display:flex;gap:8px;margin-top:8px}.anim .ctr button{padding:8px;font-size:12px}
+ol.steps{margin:8px 0;padding-left:20px;font-size:14px;color:var(--mut)}
+.dice{width:84px;height:84px;margin:56px auto 66px;perspective:600px;transition:transform .7s cubic-bezier(.2,1.3,.4,1)}
+.dice.zoom{transform:scale(2)}
+.diceres{font-family:var(--disp);font-style:italic;text-transform:uppercase;font-weight:900;font-size:26px;color:var(--acc);min-height:32px}
+.cube{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform 2.2s cubic-bezier(.15,.7,.2,1)}
+.face{position:absolute;inset:0;border-radius:16px;background:linear-gradient(135deg,#fffa80,#fff200);display:grid;grid-template:repeat(3,1fr)/repeat(3,1fr);padding:12px;box-shadow:inset 0 0 14px #0004;backface-visibility:hidden}
+.face i{width:15px;height:15px;border-radius:50%;background:#141200;place-self:center}
+.f1{transform:translateZ(42px)}.f2{transform:rotateY(90deg) translateZ(42px)}.f3{transform:rotateX(90deg) translateZ(42px)}
+.f4{transform:rotateX(-90deg) translateZ(42px)}.f5{transform:rotateY(-90deg) translateZ(42px)}.f6{transform:rotateY(180deg) translateZ(42px)}
+.bar{position:relative;width:55%;height:18px;border-radius:9px;background:var(--card2);overflow:hidden}
+.bar i{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,var(--acc),var(--cy));border-radius:9px;transition:width .4s}
+.bar span{position:absolute;inset:0;display:grid;place-items:center;font-size:11px;font-weight:800;color:#fff;mix-blend-mode:difference}
+.pickbtn{text-transform:none;font-style:normal;text-align:left;padding:10px 16px;font-size:14px;font-weight:600;font-family:inherit;letter-spacing:0}
+.sub{font-family:inherit;font-style:normal;text-transform:none;letter-spacing:0;font-size:14px;font-weight:500;color:var(--mut);margin:-4px 0 10px;line-height:1.35}
+</style>
+</head>
+<body><main id="app"></main>
+<script>
+const WORD="MOVE";
+const LEVELS={
+ leicht:{n:"Easy",d:"ohne Saltos"},
+ mittel:{n:"Medium",d:"mit Salto vorwärts"},
+ schwer:{n:"Hard",d:"Salto vw/rw, Flick …"},
+ turn10:{n:"Turn 10",d:"Turn-10-Edition"}
+};
+
+/* ---------- Bewegungs-Bausteine ---------- */
+const J=o=>({k:"jump",...o});
+const JUMP=()=>J({});
+const TW=d=>J({tw:d});
+const SIT=(d=0)=>J({to:"sit",tw:d});
+const KNEE=(d=0)=>J({to:"knee",tw:d});
+const BACK=(d=0)=>J({to:"back",tw:d});
+const BELLY=(d=0)=>J({to:"belly",tw:d});
+const FEET=(d=0)=>J({to:"stand",tw:d});
+const FRONT=(o={})=>J({d:1,n:1,...o});
+const BF=(o={})=>J({d:-1,n:1,...o});
+const SPIN=d=>({k:"spin",deg:d});
+const ROLLF=(o={})=>({k:"rollf",...o});
+const ROLLB=()=>({k:"rollb"});
+const CART=(o={})=>({k:"cart",...o});
+const HSPR=()=>({k:"hspr"});
+const FLICK=()=>({k:"flick"});
+const HAND=(o={})=>({k:"hand",hold:1,...o});
+const BAL=h=>({k:"bal",hold:h});
+
+/* ---------- Tricklisten (nach den analogen Arbeitsblättern) ---------- */
+const LISTS={
+leicht:[
+ {n:"Strecksprung",m:[JUMP()]},
+ {n:"Landung auf dem Hintern mit gestreckten Beinen",m:[SIT()]},
+ {n:"Landung auf dem Hintern mit gestreckten Beinen und eine halbe Drehung",m:[SIT(180)]},
+ {n:"Sprung und auf den Knien landen",m:[KNEE()]},
+ {n:"Halbe Drehung nach links und nach rechts (180°)",m:[TW(-180),TW(180)]},
+ {n:"360° Drehung (ganze Drehung)",m:[TW(360)]},
+ {n:"Rückenlandung",m:[BACK()]},
+ {n:"360° Drehung nach links und nach rechts",m:[TW(-360),TW(360)]},
+ {n:"Kniesprung, 360° Drehung und auf den Füßen landen",m:[KNEE(),FEET(360)]},
+ {n:"Auf dem Hintern landen und am Bauch fallen lassen",m:[SIT(),BELLY()]},
+ {n:"540° Drehung",m:[TW(540)]},
+ {n:"Auf dem Rücken landen und dann am Bauch",m:[BACK(),BELLY()]},
+ {n:"720° Drehung",m:[TW(720)]},
+ {n:"Rondat (Radwende)",m:[CART({rondat:1})]},
+ {n:"Handstützüberschlag",m:[HSPR()]},
+ {n:"Rückenlandung + Bauchlandung + 180° Drehung am Bauch",m:[BACK(),BELLY(),SPIN(180)]},
+ {n:"Rückensprung, 360° Drehung und am Rücken landen",m:[BACK(),BACK(360)]},
+ {n:"Aus dem Stand am Bauch fallen lassen",m:[BELLY()]},
+ {n:"Rückenlandung + Rolle rückwärts",m:[BACK(),ROLLB()]},
+ {n:"Kniesprung + 360° Drehung + Rückenlandung + Bauchlandung + 180° Drehung + 180° Drehung und auf den Füßen landen",m:[KNEE(),FEET(360),BACK(),BELLY(),SPIN(180),FEET(180)]}
+],
+mittel:[
+ {n:"Sprung mit ganzer Drehung",m:[TW(360)]},
+ {n:"Landung auf dem Hintern mit gestreckten Beinen und eine halbe Drehung",m:[SIT(180)]},
+ {n:"Kniesprung und ganze Drehung (360°)",m:[KNEE(),FEET(360)]},
+ {n:"Ganze Drehung nach rechts und links (360°)",m:[TW(360),TW(-360)]},
+ {n:"Rückenlandung + Bauchlandung",m:[BACK(),BELLY()]},
+ {n:"Salto vorwärts",m:[FRONT()]},
+ {n:"Kniesprung + Salto vorwärts",m:[KNEE(),FRONT()]},
+ {n:"Halbe Drehung + Salto vorwärts",m:[TW(180),FRONT()]},
+ {n:"360° Drehung + Salto vorwärts",m:[TW(360),FRONT()]},
+ {n:"Rondat + 360° Drehung",m:[CART({rondat:1}),TW(360)]},
+ {n:"360° Drehungen nach links und rechts + Salto vorwärts",m:[TW(-360),TW(360),FRONT()]},
+ {n:"Salto vorwärts + Salto vorwärts",m:[FRONT(),FRONT()]},
+ {n:"540° Salto vorwärts",m:[FRONT({tw:540})]},
+ {n:"Auf dem Rücken landen + Rolle rückwärts",m:[BACK(),ROLLB()]},
+ {n:"720° Drehung + Salto vorwärts",m:[TW(720),FRONT()]},
+ {n:"Handstützüberschlag",m:[HSPR()]},
+ {n:"Rückensprung, 360° Drehung und am Rücken landen",m:[BACK(),BACK(360)]},
+ {n:"Rückensprung + Salto vorwärts und am Hintern oder Rücken landen",m:[BACK(),FRONT({to:"sit"})]},
+ {n:"Handstützüberschlag + Salto vorwärts",m:[HSPR(),FRONT()]}
+],
+schwer:[
+ {n:"Salto vorwärts (Frontflip)",m:[FRONT()]},
+ {n:"Salto rückwärts (Backflip)",m:[BF()]},
+ {n:"Salto rückwärts gestreckt oder Salto vorwärts gestreckt",m:[BF({style:"layout"})]},
+ {n:"Salto rückwärts und am Rücken landen (1¼ Backflip)",m:[BF({to:"back"})]},
+ {n:"Salto vorwärts mit halber Schraube oder Rondat ohne Hände",m:[FRONT({tw:180})],alt:"Alternative: Rondat ohne Hände (Aerial)."},
+ {n:"Salto vorwärts + Salto vorwärts (Frontflip + Frontflip)",m:[FRONT(),FRONT()]},
+ {n:"Salto vorwärts + Salto rückwärts (Frontflip + Backflip)",m:[FRONT(),BF()]},
+ {n:"Rückenlandung + Salto rückwärts und am Bauch landen",m:[BACK(),BF({to:"belly",n:0})]},
+ {n:"Rückenlandung + Salto rückwärts auf den Füßen landen + Salto vorwärts",m:[BACK(),BF({n:0}),FRONT()]},
+ {n:"Salto rückwärts und am Bauch landen (¾ Salto rückwärts)",m:[BF({to:"belly",n:0})]},
+ {n:"Salto rückwärts + Salto vorwärts mit halber Schraube oder Rondat ohne Hände",m:[BF(),FRONT({tw:180})],alt:"Alternative: Rondat ohne Hände (Aerial)."},
+ {n:"Flick + Salto vorwärts",m:[FLICK(),FRONT()]},
+ {n:"Flick + Flick",m:[FLICK(),FLICK()]},
+ {n:"Auf dem Rücken landen + Salto vorwärts, am Hintern oder auf den Füßen landen",m:[BACK(),FRONT({to:"sit"})]},
+ {n:"Handstützüberschlag + Salto vorwärts",m:[HSPR(),FRONT()]},
+ {n:"Doppelter Salto vorwärts ins Airbag",m:[FRONT({n:2})],air:1},
+ {n:"Salto vorwärts mit ganzer Schraube ins Airbag",m:[FRONT({tw:360})],air:1},
+ {n:"Salto rückwärts mit ganzer Schraube ins Airbag",m:[BF({tw:360})],air:1}
+],
+turn10:[
+ {n:"Rolle vorwärts oder Flugrolle",m:[ROLLF()],alt:"Alternative: Flugrolle."},
+ {n:"Rolle rückwärts + ganze Drehung",m:[ROLLB(),TW(360)]},
+ {n:"5 Strecksprünge hintereinander",m:[JUMP(),JUMP(),JUMP(),JUMP(),JUMP()]},
+ {n:"Sprung auf einem Bein mit halber Drehung",m:[J({style:"one",tw:180})]},
+ {n:"Sprung auf einem Bein mit ganzer Drehung",m:[J({style:"one",tw:360})]},
+ {n:"Standwaage",m:[BAL(1)]},
+ {n:"Standwaage (3 Sekunden halten)",m:[BAL(3)]},
+ {n:"Sprung halbe Drehung und Rolle vorwärts",m:[TW(180),ROLLF()]},
+ {n:"Standwaage und 2 Mal springen",m:[BAL(1),JUMP(),JUMP()]},
+ {n:"Flick",m:[FLICK()]},
+ {n:"Handstand und 2 Sekunden halten",m:[HAND({hold:2})]},
+ {n:"Im Handstand einmal springen",m:[HAND({hold:.5,hop:1})]},
+ {n:"Handstand und abrollen vorwärts",m:[HAND({hold:1,roll:1})]},
+ {n:"Überschlag",m:[HSPR()]},
+ {n:"Rondat + ganze Drehung danach",m:[CART({rondat:1}),TW(360)]},
+ {n:"Rad mit einem Arm",m:[CART()]},
+ {n:"Schersprung",m:[J({style:"scissor"})]},
+ {n:"Grätschsprung oder Grätschwinkelsprung",m:[J({style:"straddle"})]},
+ {n:"Paketsprung",m:[J({style:"tuck"})]},
+ {n:"Ganze Drehung",m:[TW(360)]},
+ {n:"Aerial (Rad ohne Hände)",m:[CART({aerial:1})]},
+ {n:"Salto vorwärts oder Salto rückwärts",m:[FRONT()],alt:"Alternative: Salto rückwärts."},
+ {n:"Überschlag + Salto vorwärts",m:[HSPR(),FRONT()]},
+ {n:"Rondat + Salto rückwärts",m:[CART({rondat:1}),BF()]},
+ {n:"Rondat + Flick + Salto rückwärts",m:[CART({rondat:1}),FLICK(),BF()]},
+ {n:"720° Drehung (2 Drehungen)",m:[TW(720)]},
+ {n:"Sprung mit halber Drehung und noch in der Luft Salto vorwärts (Arabian)",m:[FRONT({tw:180})]}
+]};
+const SHORT={
+leicht:["Strecksprung","Sitzlandung","Sitz-Halbdrehung","Knielandung","Halbdrehung links/rechts","Ganze Drehung","Rückenlandung","360° links/rechts","Knie-Drehung","Sitz-Bauch","540° Drehung","Rücken-Bauch","720° Drehung","Rondat","Überschlag","Rücken-Bauch-Dreher","Rückensprung 360°","Bauchfall","Rücken-Rolle","Mega-Kombi"],
+mittel:["Ganze Drehung","Sitz-Halbdrehung","Knie-Drehung","360° rechts/links","Rücken-Bauch","Salto vorwärts","Knie-Salto","Halbdrehung-Salto","360°-Salto","Rondat-Drehung","360° L/R + Salto","Salto-Salto","540°-Salto","Rücken-Rolle","720°-Salto","Überschlag","Rückensprung 360°","Rücken-Salto","Überschlag-Salto"],
+schwer:["Frontflip","Backflip","Gestreckter Salto","Backflip auf den Rücken","Salto halbe Schraube","Front + Front","Front + Back","Rücken-Back-Bauch","Rücken-Back-Front","¾ Backflip","Back + Halbschraube","Flick-Front","Flick-Flick","Rücken-Front","Überschlag-Front","Doppelsalto","Ganze Schraube vorwärts","Ganze Schraube rückwärts"],
+turn10:["Rolle vorwärts","Rolle rw + Drehung","5× Strecksprung","Einbein ½ Drehung","Einbein 360°","Standwaage","Standwaage 3 Sek.","Halbdrehung-Rolle","Waage + 2 Sprünge","Flick","Handstand 2 Sek.","Handstand-Sprung","Handstand-Rolle","Überschlag","Rondat-Drehung","Rad einarmig","Schersprung","Grätschwinkelsprung","Paketsprung","Ganze Drehung","Aerial","Salto","Überschlag-Salto","Rondat-Back","Rondat-Flick-Back","720° Drehung","Arabian"]
+};
+for(const l in LISTS)if(SHORT[l].length!==LISTS[l].length)console.warn("SHORT passt nicht:",l);
+const TRICKS=[];
+for(const l in LISTS)LISTS[l].forEach((t,j)=>{
+  t.l=l;t.r=j+1;t.k=SHORT[l][j]||t.n;t.v=t.v||"";
+  t.s=t.air||t.m.some(x=>(x.k==="jump"&&x.n>0)||["cart","hspr","flick","hand"].includes(x.k))?1:0;
+  t.i=TRICKS.length;TRICKS.push(t);
+});
+
+/* ---------- Strichmännchen-Engine ---------- */
+const D2R=Math.PI/180,LT=30,LA=26,LU=22;
+const BASE={stand:0,sit:0,knee:0,back:-90,belly:90};
+const KEYS=["x","y","T","tw","hd","a","h","k","h2","k2","sp","as","bd"];
+const P=o=>Object.assign({x:0,y:44,T:0,tw:0,hd:0,a:170,as:14,bd:0,h:0,k:0,h2:null,k2:null,sp:0,st:"air"},o);
+const K=o=>{const q=P(o);if(q.h2==null)q.h2=q.h;if(q.k2==null)q.k2=q.k;return q};
+const ST={stand:{y:44,a:170,h:0,k:0},sit:{y:2,a:140,h:90,k:0,bd:10},knee:{y:24,a:100,h:0,k:90,bd:6},back:{y:2,T:-90,a:160,h:15,k:20,bd:20,hd:10},belly:{y:2,T:90,a:15,h:-15,k:30,bd:-28,hd:-25}};
+const stPose=(s,o)=>K(Object.assign({st:s},ST[s],o||{}));
+const kf=(t,p)=>Object.assign({},p,{t});
+const STYLE={
+ stretch:{h:0,k:0,a:0,sp:0},twist:{h:0,k:0,a:140,as:74,sp:0},
+ tuck:{h:110,k:110,a:130,sp:0,bd:25},pike:{h:95,k:0,a:95,sp:0,bd:25},layout:{h:0,k:0,a:0,sp:0,bd:-8},
+ straddle:{h:75,k:0,a:95,sp:40,bd:20},scissor:{h:55,k:0,h2:-45,k2:0,a:100,sp:0},
+ one:{h:0,k:0,h2:-30,k2:95,a:60,sp:0}
+};
+const sv=(s,key)=>s[key]??(key==="h2"?s.h:key==="k2"?s.k:key==="as"?14:0);
+const mix=(a,b,w)=>a+(b-a)*w;
+const norm=p=>{const q=Object.assign({},p);const b=BASE[q.st]??0;q.T-=360*Math.round((q.T-b)/360);q.tw=((q.tw%360)+540)%360-180;q.x=0;return q};
+const standEnd=p=>norm(Object.assign({},p,{st:"stand"}));
+
+function joints(p){
+  const c=Math.cos(p.tw*D2R);
+  const d=(ang,len)=>[Math.sin(ang*D2R)*len*c,Math.cos(ang*D2R)*len];
+  const add=(a,b)=>[a[0]+b[0],a[1]+b[1]];
+  const hip=[p.x,p.y],wa=add(hip,d(p.T,LT*.5)),sh=add(wa,d(p.T+p.bd,LT*.5)),head=add(sh,d(p.T+p.bd+p.hd,11));
+  const lat=(p.as-14)/60*LA*.7,sn=Math.sin(p.tw*D2R);
+  const armE=(da,sg)=>{const q=add(sh,d(p.T+p.bd+p.a+da,LA));return[q[0]+sg*lat*sn,q[1]]};
+  const arm1=armE(-7,1),arm2=armE(7,-1);
+  const leg=(h,k,off)=>{const th=p.T+180-h+off,kn=add(hip,d(th,LU));return[kn,add(kn,d(th+k,LU))]};
+  const l1=leg(p.h,p.k,-p.sp),l2=leg(p.h2,p.k2,p.sp);
+  const pts=[hip,wa,sh,arm1,arm2,l1[0],l1[1],l2[0],l2[1]];
+  let minY=head[1]-7,maxY=head[1]+7;
+  for(const q of pts){minY=Math.min(minY,q[1]);maxY=Math.max(maxY,q[1])}
+  return{hip,wa,sh,head,arm1,arm2,l1,l2,minY,maxY};
+}
+function fix(p){const J=joints(p);return J.minY<0?Object.assign({},p,{y:p.y-J.minY}):p}
+function sampleSeg(seg,t){
+  const k=seg.kfs,n=k.length;
+  if(t<=k[0].t)return k[0];if(t>=k[n-1].t)return k[n-1];
+  let i=0;while(k[i+1].t<t)i++;
+  const p0=k[Math.max(i-1,0)],p1=k[i],p2=k[i+1],p3=k[Math.min(i+2,n-1)];
+  const dt=p2.t-p1.t,u=(t-p1.t)/dt,u2=u*u,u3=u2*u,out={};
+  const h00=2*u3-3*u2+1,h10=u3-2*u2+u,h01=-2*u3+3*u2,h11=u3-u2;
+  for(const key of KEYS){
+    const v1=p1[key],v2=p2[key];
+    const m1=i>0?(v2-p0[key])/(p2.t-p0.t):(v2-v1)/dt;
+    const m2=i+2<n?(p3[key]-v1)/(p3.t-p1.t):(v2-v1)/dt;
+    out[key]=h00*v1+h10*dt*m1+h01*v2+h11*dt*m2;
+  }
+  return out;
+}
+
+/* Bausteine -> Keyframe-Segmente */
+function jlabel(S,o,to){
+  const tw=o.tw||0,a=Math.abs(tw),tws=a?`${a}° Drehung ${tw<0?"nach links":"nach rechts"}`:"";
+  const toTxt={sit:"Landung auf dem Hintern (Beine gestreckt)",knee:"Landung auf den Knien",back:"Rückenlandung",belly:"Bauchlandung"}[to];
+  if(o.n>0){
+    const nm=(o.n>=2?"Doppelter ":"")+(o.d>0?"Salto vorwärts":"Salto rückwärts");
+    const stl={layout:" gestreckt",pike:" gebückt"}[o.style]||"";
+    return nm+stl+(a?` mit ${a}° Schraube`:"")+(toTxt?`, ${toTxt}`:"");
+  }
+  if(to==="stand"){
+    if(S.st!=="stand")return a?`Sprung in den Stand mit ${tws}`:"Zurück in den Stand";
+    if(o.style==="tuck")return"Paketsprung";
+    if(o.style==="straddle")return"Grätschwinkelsprung";
+    if(o.style==="scissor")return"Schersprung";
+    if(o.style==="one")return"Sprung auf einem Bein"+(a?` mit ${tws}`:"");
+    return a?`Sprung mit ${tws}`:"Strecksprung";
+  }
+  return`Sprung, ${toTxt}${a?` mit ${tws}`:""}`;
+}
+function mJump(S,o){
+  o=Object.assign({to:"stand",d:null,n:0,tw:0,style:null,H:null},o);
+  const to=o.to,base=BASE[to];
+  let d=o.d;if(d==null)d=to==="back"?-1:to==="belly"?1:0;
+  if(o.n>0&&!d)d=1;
+  let dT;
+  if(!d)dT=((base-S.T+540)%360+360)%360-180;
+  else dT=d*(((d*(base-S.T))%360+360)%360)+d*360*o.n;
+  const style=STYLE[o.style||(o.n>0?"tuck":o.tw?"twist":to==="sit"?"pike":"stretch")];
+  const grounded=S.st==="stand";
+  const air=.8+.3*o.n+.7*Math.abs(o.tw)/360;
+  const H=o.H??((o.n>=2?80:o.n>=1?62:46)+Math.min(14,10*Math.abs(o.tw)/360));
+  const Lp=ST[to],yL=Lp.y,y0=grounded?46:30;
+  const cd=grounded?.24:.14,tTake=cd+.1;
+  const kfs=[kf(0,S)];
+  kfs.push(grounded?kf(cd,K({y:36,T:S.T,tw:S.tw,x:S.x,h:35,k:70,a:215,bd:14})):kf(cd,S));
+  const ps=[0,.18,.35,.65,.82,1],bl=[0,.5,1,1,.5,0];
+  ps.forEach((p,i)=>{
+    const lam=p<.6?0:(p-.6)/.4,par={};
+    for(const key of["h","k","a","sp","h2","k2","as","bd"]){
+      const lv=key==="h2"?Lp.h:key==="k2"?Lp.k:key==="as"?14:Lp[key]??0;
+      par[key]=mix(mix(sv(STYLE.stretch,key),sv(style,key),bl[i]),lv,lam);
+    }
+    let y=(1-p)*y0+p*yL+H*4*p*(1-p);
+    const sm=Math.min(1,Math.max(0,(p-.1)/.8));
+    const tw=S.tw+o.tw*(sm*sm*(3-2*sm));
+    let pose=K(Object.assign({x:S.x,y,T:S.T+dT*p,tw,hd:mix(0,Lp.hd||0,lam)},par));
+    if(p===1){
+      if(to==="stand")pose=K({x:S.x,y:40,T:S.T+dT,tw,h:20,k:40,a:150});
+      else pose=stPose(to,Object.assign({x:S.x,T:S.T+dT,tw},to==="back"||to==="belly"?{h:0,k:0}:{}));
+    }
+    kfs.push(kf(tTake+air*p,pose));
+  });
+  const tEnd=tTake+air;
+  const fin=stPose(to,{x:S.x,T:S.T+dT,tw:S.tw+o.tw});
+  const lying=to!=="stand";
+  if(lying){
+    const X={back:{y:12,h:30,k:30,bd:14,a:-25},belly:{y:12,h:-18,k:25,bd:-12,a:12,hd:-10},sit:{y:8,h:-8,bd:10,a:-30},knee:{y:7,bd:8,a:-20}}[to];
+    const rb=stPose(to,{x:S.x,T:S.T+dT,tw:S.tw+o.tw});
+    for(const key in X){rb[key]=(key==="y"?ST[to].y:rb[key])+X[key]}
+    kfs.push(kf(tEnd+.17,rb));
+    kfs.push(kf(tEnd+.48,fin));
+  }else kfs.push(kf(tEnd+.3,fin));
+  return{kfs,dur:tEnd+(lying?.65:.35),label:jlabel(S,o,to),end:norm(fin)};
+}
+function mSpin(S,o){
+  const L=.4+.9*Math.abs(o.deg)/360;
+  const kfs=[kf(0,S),kf(L/2,Object.assign({},S,{tw:S.tw+o.deg/2,y:S.y+4})),kf(L,Object.assign({},S,{tw:S.tw+o.deg}))];
+  const end=norm(kfs[2]);
+  return{kfs,dur:L+.15,label:`${o.deg}° Drehung am Boden`,end};
+}
+function rowsSeg(S,list,label,from){
+  const kfs=[kf(0,from||S)];let t=0;
+  list.forEach(([dt,o])=>{t+=dt;kfs.push(kf(t,K(o)))});
+  return{kfs,dur:t+.15,label,end:standEnd(kfs[kfs.length-1])};
+}
+const R=(o)=>Object.assign({h:0,k:0,bd:(o.h>=90?28:o.h>=30?10:0)},o);
+function mCart(S,o){
+  const T=[0,45,90,135,180,225,270,315],Y=[44,47,52,56,56,56,52,47],SP=[0,10,30,40,40,40,30,10],lift=o.aerial?16:0;
+  const list=T.map((v,i)=>[i?.17:.12,R({x:-30+60*i/7,y:Y[i]+(i>0?lift:0),T:v,a:0,sp:SP[i]})]);
+  list.push([.15,R({x:30,y:40,T:360,h:20,k:40,a:150})],[.3,R({x:0,y:44,T:360,a:170})]);
+  return rowsSeg(S,list,o.aerial?"Aerial (Rad ohne Hände)":o.rondat?"Rondat (Radwende)":"Rad");
+}
+function mHspr(S){
+  return rowsSeg(S,[[.22,R({x:-25,y:38,T:20,h:30,k:40,a:0})],[.22,R({x:-20,y:50,T:100,a:0})],[.2,R({x:-5,y:58,T:180,a:0})],[.2,R({x:10,y:60,T:250,a:0,h:20})],[.2,R({x:22,y:50,T:330,a:60,h:15})],[.12,R({x:26,y:40,T:360,h:20,k:40,a:150})],[.3,R({x:0,y:44,T:360,a:170})]],"Handstützüberschlag");
+}
+function mFlick(S){
+  return rowsSeg(S,[[.22,R({y:34,T:-12,h:35,k:70,a:215})],[.2,R({x:-12,y:52,T:-80,a:0})],[.2,R({x:-22,y:58,T:-180,a:0})],[.2,R({x:-30,y:60,T:-250,a:0,h:15})],[.2,R({x:-38,y:50,T:-330,a:60})],[.12,R({x:-42,y:40,T:-360,h:20,k:40,a:150})],[.3,R({x:0,y:44,T:-360,a:170})]],"Flick (Rückwärts-Handstützüberschlag)");
+}
+function mHand(S,o){
+  const hs=R({y:58,T:180,a:0});
+  const list=[[.3,R({y:40,T:35,h:50,h2:-10,a:0})],[.3,R({y:52,T:120,a:0})],[.25,hs],[Math.max(.05,o.hold),hs]];
+  if(o.hop)list.push([.15,R({y:66,T:180,a:0})],[.2,hs]);
+  if(o.roll)list.push([.2,R({T:230,y:36,h:90,k:100,a:130})],[.2,R({T:285,y:20,h:120,k:120,a:130})],[.2,R({T:330,y:30,h:40,k:80,a:150})],[.2,R({T:360,y:44,a:170})]);
+  else list.push([.3,R({y:52,T:120,a:0})],[.3,R({y:40,T:35,h:50,h2:-10,a:0})],[.3,R({y:44,T:0,a:170})]);
+  return rowsSeg(S,list,o.roll?"Handstand und abrollen":o.hop?"Handstand mit Sprung":`Handstand (${o.hold} Sek. halten)`);
+}
+function mBal(S,o){
+  const b=R({T:75,y:44,h:75,h2:-15,a:15});
+  return rowsSeg(S,[[.5,b],[o.hold,b],[.5,R({T:0,y:44,a:170})]],`Standwaage (${o.hold} Sek. halten)`);
+}
+function mRollf(S,o){
+  const list=[];
+  if(o.fly)list.push([.3,R({y:38,T:10,h:35,k:70,a:215})],[.3,R({y:78,T:40,a:90})]);
+  list.push([.25,R({T:35,y:32,h:45,k:80,a:110})],[.2,R({T:110,y:24,h:120,k:120,a:120})],[.2,R({T:190,y:20,h:120,k:120,a:130})],[.2,R({T:270,y:15,h:120,k:120,a:130})],[.2,R({T:330,y:30,h:45,k:80,a:150})],[.2,R({T:360,y:44,a:170})]);
+  return rowsSeg(S,list,"Rolle vorwärts");
+}
+function mRollb(S){
+  let list=[[.25,R({T:-35,y:32,h:45,k:80,a:215})],[.2,R({T:-110,y:16,h:120,k:120,a:100})],[.2,R({T:-190,y:26,h:120,k:120,a:90})],[.2,R({T:-270,y:16,h:120,k:120,a:90})],[.2,R({T:-330,y:30,h:45,k:80,a:150})],[.2,R({T:-360,y:44,a:170})]];
+  if(S.st==="back")list=list.slice(1);
+  return rowsSeg(S,list,"Rolle rückwärts");
+}
+const MOVES={jump:mJump,spin:mSpin,cart:mCart,hspr:mHspr,flick:mFlick,hand:mHand,bal:mBal,rollf:mRollf,rollb:mRollb};
+const NEEDSTAND=new Set(["cart","hspr","flick","hand","bal","rollf"]);
+function build(tr){
+  let S=stPose("stand"),t=0;const segs=[];
+  const push=r=>{r.t0=t;t+=r.dur;segs.push(r);S=r.end};
+  for(const mv of tr.m){
+    const needs=NEEDSTAND.has(mv.k)||(mv.k==="rollb"&&S.st!=="stand"&&S.st!=="back");
+    if(needs&&S.st!=="stand")push(mJump(S,{to:"stand"}));
+    push(MOVES[mv.k](S,mv));
+  }
+  return{segs,dur:t};
+}
+function at(tl,t){
+  let idx=tl.segs.length-1;
+  for(let i=0;i<tl.segs.length;i++){if(t<tl.segs[i].t0+tl.segs[i].dur){idx=i;break}}
+  const s=tl.segs[idx];
+  return{p:fix(sampleSeg(s,Math.min(t-s.t0,s.dur))),idx};
+}
+
+/* Player */
+const COL={shirt:"#fff200",shirtB:"#b8ad00",pants:"#e8ecf8",pantsB:"#8b93ad",skin:"#ffd2a8",hair:"#2a1a12",shoe:"#fff200"};
+function figSvg(p,ghost){
+  const J=joints(p),X=x=>x.toFixed(1),Y=y=>(130-y).toFixed(1);
+  if(ghost){
+    const g=(a,b,w)=>`<line x1="${X(a[0])}" y1="${Y(a[1])}" x2="${X(b[0])}" y2="${Y(b[1])}" stroke-width="${w}"/>`;
+    return `<g stroke="#fff200" fill="#fff200" stroke-linecap="round" opacity="${ghost}">`+g(J.hip,J.wa,8)+g(J.wa,J.sh,8)+g(J.sh,J.arm1,4)+g(J.hip,J.l1[0],6)+g(J.l1[0],J.l1[1],5)+g(J.hip,J.l2[0],6)+g(J.l2[0],J.l2[1],5)+`<circle cx="${X(J.head[0])}" cy="${Y(J.head[1])}" r="7" stroke="none"/></g>`;
+  }
+  const L=(a,b,w,c)=>`<line x1="${X(a[0])}" y1="${Y(a[1])}" x2="${X(b[0])}" y2="${Y(b[1])}" stroke="${c}" stroke-width="${w}" stroke-linecap="round"/>`;
+  const C=(a,r,c)=>`<circle cx="${X(a[0])}" cy="${Y(a[1])}" r="${r}" fill="${c}"/>`;
+  const cs=Math.cos(p.tw*D2R),fo=[Math.sin((p.T+p.bd+90)*D2R)*3*cs,Math.cos((p.T+p.bd+90)*D2R)*3];
+  const faceC=[J.head[0]+fo[0],J.head[1]+fo[1]];
+  return L(J.sh,J.arm2,4.5,COL.shirtB)+C(J.arm2,2.6,COL.skin)
+   +L(J.hip,J.l2[0],7,COL.pantsB)+L(J.l2[0],J.l2[1],6,COL.pantsB)+C(J.l2[1],3.6,COL.shoe)
+   +L(J.hip,J.wa,10,COL.shirt)+L(J.wa,J.sh,10,COL.shirt)
+   +L(J.hip,J.l1[0],7.5,COL.pants)+L(J.l1[0],J.l1[1],6.5,COL.pants)+C(J.l1[1],3.8,COL.shoe)
+   +L(J.sh,J.arm1,5,COL.shirt)+C(J.arm1,2.8,COL.skin)
+   +C(J.head,7.6,COL.hair)+(Math.abs(cs)>.25?C(faceC,5.6,COL.skin):"");
+}
+function twistInset(seg,p,cx,cy){
+  if(seg.tw===undefined){const ts=seg.kfs.map(k=>k.tw);seg.tw=Math.max(...ts)-Math.min(...ts)>1;seg.tw0=seg.kfs[0].tw}
+  if(!seg.tw)return"";
+  const R=17,a0=seg.tw0,a1=p.tw,d=a1-a0,n=Math.max(2,Math.ceil(Math.abs(d)/6)),pts=[];
+  for(let i=0;i<=n;i++){const a=(a0+d*i/n)*D2R;pts.push(`${(cx+(R+4)*Math.cos(a)).toFixed(1)},${(cy+(R+4)*Math.sin(a)).toFixed(1)}`)}
+  const ar=a1*D2R,ex=cx+R*Math.cos(ar),ey=cy+R*Math.sin(ar),hx=Math.cos(ar),hy=Math.sin(ar);
+  const head=`${(ex).toFixed(1)},${(ey).toFixed(1)} ${(ex-5*hx+3*hy).toFixed(1)},${(ey-5*hy-3*hx).toFixed(1)} ${(ex-5*hx-3*hy).toFixed(1)},${(ey-5*hy+3*hx).toFixed(1)}`;
+  return `<circle cx="${cx}" cy="${cy}" r="${R+8}" fill="#000" fill-opacity=".55" stroke="#303030"/>
+   <polyline points="${pts.join(" ")}" fill="none" stroke="#ff2e88" stroke-width="2" stroke-linecap="round"/>
+   <circle cx="${cx}" cy="${cy}" r="4" fill="#ffd2a8"/>
+   <line x1="${cx}" y1="${cy}" x2="${ex.toFixed(1)}" y2="${ey.toFixed(1)}" stroke="#fff200" stroke-width="2.5" stroke-linecap="round"/>
+   <polygon points="${head}" fill="#fff200"/>
+   <text x="${cx}" y="${cy+R+19}" text-anchor="middle" font-size="9" font-weight="800" fill="#fff200" font-family="system-ui,sans-serif">${d>=0?"↻":"↺"} ${Math.round(Math.abs(d))}°</text>
+   <text x="${cx}" y="${cy-R-12}" text-anchor="middle" font-size="6.5" fill="#a3a3a3" font-family="system-ui,sans-serif">von oben</text>`;
+}
+function sampleHip(tl){
+  const pts=[];for(let t=0;t<=tl.dur;t+=.04){const q=at(tl,t).p;pts.push(`${q.x.toFixed(1)},${(130-q.y).toFixed(1)}`)}
+  return pts.join(" ");
+}
+function stopAnim(el){if(el&&el._raf){cancelAnimationFrame(el._raf);el._raf=0}}
+function mountAnim(el,tr){
+  stopAnim(el);
+  const tl=tr._tl||(tr._tl=build(tr));
+  let top=125,xm=0;
+  for(let t=0;t<tl.dur;t+=.05){const q=at(tl,t).p;top=Math.max(top,joints(q).maxY+10);xm=Math.max(xm,Math.abs(q.x)+30)}
+  const hw=Math.max(75,Math.min(120,xm)),bw=hw-10;
+  const vbT=130-top,vbH=150-vbT;
+  const grid=[40,80,120].filter(h=>130-h>vbT+4).map(h=>`<line x1="${-hw}" x2="${hw}" y1="${130-h}" y2="${130-h}" stroke="#ffffff" stroke-opacity=".05"/>`).join("");
+  el.innerHTML=`<svg viewBox="${-hw} ${vbT.toFixed(0)} ${2*hw} ${vbH.toFixed(0)}">${grid}
+   <polyline points="${sampleHip(tl)}" fill="none" stroke="#ff2e88" stroke-opacity=".6" stroke-width="1.4" stroke-dasharray="3 4"/>
+   <ellipse class="sh" cx="0" cy="133" rx="14" ry="2.5" fill="#000" opacity=".4"/>
+   <path class="bed" d="M${-bw} 132 Q0 132 ${bw} 132" fill="none" stroke="#fff200" stroke-width="4" stroke-linecap="round"/>
+   <path d="M${-bw} 136 L${bw} 136" stroke="#303030" stroke-width="2"/>
+   <line x1="${-bw+12}" y1="136" x2="${-bw+4}" y2="150" stroke="#555555" stroke-width="3"/><line x1="${bw-12}" y1="136" x2="${bw-4}" y2="150" stroke="#555555" stroke-width="3"/>
+   <g class="gh"></g><g class="fig"></g><g class="twi"></g></svg>
+   <div class="cap"></div><div class="chips">${tl.segs.map(()=>"<i></i>").join("")}</div>
+   <div class="ctr"><button data-a="pp">Pause</button><button data-a="sp">Zeitlupe</button></div>`;
+  const twi=el.querySelector(".twi"),fig=el.querySelector(".fig"),gh=el.querySelector(".gh"),cap=el.querySelector(".cap"),det=el.closest("details");
+  const bed=el.querySelector(".bed"),shd=el.querySelector(".sh"),chips=[...el.querySelectorAll(".chips i")];
+  let last=performance.now(),pos=0,speed=1,paused=false,lastIdx=-1;
+  el.querySelector('[data-a=pp]').onclick=e=>{paused=!paused;e.target.textContent=paused?"Weiter":"Pause"};
+  el.querySelector('[data-a=sp]').onclick=e=>{speed=speed===1?.4:1;e.target.textContent=speed===1?"Zeitlupe":"Normal"};
+  function frame(now){
+    if(!el.isConnected||(det&&!det.open)){el._raf=0;return}
+    const dt=Math.min(.1,(now-last)/1000);last=now;
+    if(!paused){pos+=dt*speed;if(pos>tl.dur+.9)pos=0}
+    const t=Math.min(pos,tl.dur),r=at(tl,t);
+    let g="";
+    [[.1,.22],[.2,.14],[.3,.07]].forEach(([o,a])=>{if(t-o>0)g+=figSvg(at(tl,t-o).p,a)});
+    gh.innerHTML=g;
+    fig.innerHTML=figSvg(r.p);
+    twi.innerHTML=twistInset(tl.segs[r.idx],r.p,hw-30,vbT+44);
+    const mn=joints(r.p).minY,dip=Math.max(0,3-mn)*1.4,x=r.p.x;
+    bed.setAttribute("d",`M${-bw} 132 Q${x.toFixed(1)} ${(132+dip*2).toFixed(1)} ${bw} 132`);
+    const hgt=Math.max(0,r.p.y-30);shd.setAttribute("cx",x.toFixed(1));shd.setAttribute("rx",(15*Math.max(.35,1-hgt/150)).toFixed(1));shd.setAttribute("opacity",(.45*Math.max(.25,1-hgt/150)).toFixed(2));
+    if(r.idx!==lastIdx){lastIdx=r.idx;cap.textContent=`${r.idx+1}/${tl.segs.length} · ${tl.segs[r.idx].label}`;chips.forEach((c,i)=>c.classList.toggle("on",i<=r.idx))}
+    el._raf=requestAnimationFrame(frame);
+  }
+  el._raf=requestAnimationFrame(frame);
+}
+function tg(det,i){
+  const el=det.querySelector(".anim");
+  if(det.open)mountAnim(el,trickById(i));else stopAnim(el);
+}
+
+/* ---------- App ---------- */
+const $=s=>document.querySelector(s);
+const app=$("#app");
+const store={get(k,d){try{return JSON.parse(localStorage.getItem("fm_"+k))??d}catch(e){return d}},set(k,v){try{localStorage.setItem("fm_"+k,JSON.stringify(v))}catch(e){}}};
+const MODES={
+ klassik:{n:"Klassik",d:"Fehler = Buchstabe von "+WORD},
+ aufstieg:{n:"Aufstieg",d:"Wer schafft die Liste zuerst?"},
+ wunsch:{n:"Wunschtrick",d:"Du wählst den Trick für die anderen"},
+ kombo:{n:"Kombo",d:"2–3 Tricks hintereinander"}
+};
+let G={view:"home",level:store.get("level","leicht"),order:store.get("order","liste"),mode:store.get("mode","klassik"),klen:2,players:["Spieler 1","Spieler 2"],game:null,filter:"alle"};
+if(!LEVELS[G.level])G.level="leicht";
+if(!MODES[G.mode])G.mode="klassik";
+if(!["liste","zufall","wuerfel"].includes(G.order))G.order="liste";
+const DYN={};let dynN=0;
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const pool=l=>LISTS[l];
+const trickById=i=>DYN[i]||TRICKS[i];
+
+function nav(){return `<div class="nav"><button class="${["home","setup","play","end"].includes(G.view)?"sel":""}" onclick="go('home')">Spielen</button><button class="${G.view==="guide"?"sel":""}" onclick="go('guide')">Anleitung</button><button class="${G.view==="info"?"sel":""}" onclick="go('info')">Hinweise</button></div>`}
+function go(v){G.view=v;render()}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+
+/* Würfel */
+const PAT={1:[5],2:[1,9],3:[1,5,9],4:[1,3,7,9],5:[1,3,5,7,9],6:[1,3,4,6,7,9]};
+const FACE={1:[0,0],2:[0,-90],3:[-90,0],4:[90,0],5:[0,90],6:[0,180]};
+const dieT=(v,spin)=>{const[f,y]=FACE[v];const s=spin?720:0;return `rotateX(-22deg) rotateY(-28deg) rotateX(${f+s}deg) rotateY(${y+s}deg)`};
+function dieHtml(v){
+  const faces=[1,2,3,4,5,6].map(n=>`<div class="face f${n}">${PAT[n].map(c=>`<i style="grid-area:${Math.ceil(c/3)}/${(c-1)%3+1}"></i>`).join("")}</div>`).join("");
+  return `<div class="dice"><div class="cube" style="transform:${dieT(v||1,false)}">${faces}</div></div>`;
+}
+function rollDie(done){
+  const cube=document.querySelector(".cube");
+  if(!cube||G.rolling)return;
+  G.rolling=true;
+  document.querySelectorAll(".rollbtn").forEach(b=>b.disabled=true);
+  const v=1+Math.floor(Math.random()*6);
+  const dice=cube.parentElement,res=document.querySelector(".diceres");
+  const [fx,fy]=FACE[v];
+  dice.classList.add("zoom");
+  cube.style.transform=`rotateX(0deg) rotateY(0deg) rotateX(${fx+720}deg) rotateY(${fy+720}deg)`;
+  setTimeout(()=>{
+    if(res)res.textContent=`${v} · ${BANDTXT[v]}`;
+    const b=document.querySelector(".rollbtn");
+    if(b){b.textContent="Weiter";b.disabled=false;b.onclick=()=>{G.rolling=false;done(v)}}
+  },2400);
+}
+function pickBand(p,v){
+  const n=p.length,a=Math.floor((v-1)*n/6),b=Math.max(a+1,Math.floor(v*n/6));
+  return p[a+Math.floor(Math.random()*(b-a))];
+}
+const BANDTXT=["","sehr leicht","leicht","eher leicht","eher schwer","schwer","am schwersten"];
+function diceCard(fn,txt){
+  const v=G.game.die||1;
+  return `<div class="card" style="text-align:center">${dieHtml(v)}<div class="diceres"></div><p class="mut small">${txt||"1 = leichte Tricks der Stufe · 6 = die schwersten"}</p><button class="pri rollbtn" onclick="${fn}">Würfeln</button></div>`;
+}
+function rollTurn(){
+  rollDie(v=>{const g=G.game;g.die=v;g.trick=pickBand(pool(g.level),v);render()});
+}
+
+/* Kombo */
+function genCombo(level,len){
+  const sel=shuffle(pool(level).slice()).slice(0,len),id="c"+(++dynN);
+  const t={i:id,k:sel.map(x=>x.k).join(" + "),n:sel.map(x=>x.n).join(" + "),m:sel.flatMap(x=>x.m),l:level,r:0,v:"",s:sel.some(x=>x.s)?1:0,air:sel.some(x=>x.air)?1:0,combo:1};
+  DYN[id]=t;return t;
+}
+
+function nextTrick(){
+  const g=G.game,p=pool(g.level);g.die=null;
+  if(g.mode==="kombo"){g.trick=genCombo(g.level,G.klen);return}
+  if(G.order==="wuerfel"){g.trick=null;return}
+  if(G.order==="liste"){g.i=g.i||0;g.trick=p[g.i%p.length];g.i++}
+  else{if(!g.deck.length)g.deck=shuffle(p.slice());g.trick=g.deck.pop()}
+}
+function levelButtons(){return `<div class="lvl">${Object.entries(LEVELS).map(([k,v])=>`<button class="${G.level===k?"sel":""}" onclick="setLevel('${k}')"><b>${v.n}</b><small>${v.d} · ${LISTS[k].length} Tricks</small></button>`).join("")}</div>`}
+function orderButtons(){
+  const o=[["liste","Reihenfolge","wie Arbeitsblatt"],["zufall","Zufall","gemischt"],["wuerfel","Würfel","entscheidet"]];
+  return `<div class="row" style="margin-top:12px">${o.map(([k,a,b])=>`<button class="${G.order===k?"pri":""}" onclick="setOrder('${k}')">${a}</button>`).join("")}</div>`;
+}
+function setLevel(k){G.level=k;store.set("level",k);render()}
+function setOrder(k){G.order=k;store.set("order",k);render()}
+function setMode(k){G.mode=k;store.set("mode",k);while(G.mode==="aufstieg"?false:G.players.length<2)G.players.push("Spieler "+(G.players.length+1));render()}
+function steps(t){const tl=t._tl||(t._tl=build(t));return `<ol class="steps">${tl.segs.map(s=>`<li>${esc(s.label)}</li>`).join("")}</ol>`}
+function trickBox(t){
+  const vid=t.v?(/\.(mp4|webm)$/i.test(t.v)?`<video controls playsinline src="${esc(t.v)}"></video>`:`<p class="vid"><a style="color:var(--acc)" href="${esc(t.v)}" target="_blank" rel="noopener">Beispielvideo ansehen</a></p>`):`<p class="vid">Echtes Beispielvideo folgt.</p>`;
+  return `${t.s?`<div class="safety"><b>Nur mit Lehrkraft und passender Sicherung.</b>${t.air?" Nur mit Airbag.":""} Auslassen, wenn du dir nicht sicher bist.</div>`:""}<div class="anim"></div>${steps(t)}${t.alt?`<p class="mut small">${esc(t.alt)}</p>`:""}${vid}`;
+}
+function tagFor(t){
+  const g=G.game;
+  if(g.mode==="kombo")return `Kombo · ${G.klen} Tricks`;
+  if(g.mode==="wunsch")return "Wunschtrick";
+  if(g.die)return `Gewürfelt: ${g.die} (${BANDTXT[g.die]})`;
+  if(g.mode==="aufstieg"||G.order==="liste")return `Runde ${t.r}/${LISTS[t.l].length}`;
+  return "Trick";
+}
+function trickCard(t){
+  return `<div class="card"><span class="tag ${t.s?"w":""}">${tagFor(t)}</span><div class="trick">${esc(t.k||t.n)}</div>${t.k&&t.k!==t.n?`<div class="sub">${esc(t.n)}</div>`:""}
+  <details ontoggle="tg(this,'${t.i}')"><summary>Anleitung & Animation</summary>${trickBox(t)}</details></div>
+  <div class="row"><button class="ok" onclick="answer(true)">Geschafft</button><button class="bad" onclick="answer(false)">Fehler</button></div>
+  ${t.s?`<button style="margin-top:10px" onclick="skip()">Auslassen (ohne Nachteil)</button>`:""}`;
+}
+function letters(q,small){return `<div class="letters">${[...WORD].map((c,j)=>`<b ${small?'style="width:26px;height:26px;font-size:13px"':""} class="${j<q.f?"on":""}">${c}</b>`).join("")}</div>`}
+function board(g){
+  const N=pool(g.level).length;
+  return `<div class="card" style="padding:8px">${g.p.map((q,i)=>{
+    const out=g.mode!=="aufstieg"&&q.f>=WORD.length;
+    const right=g.mode==="aufstieg"?`<div class="bar"><i style="width:${100*q.pos/N}%"></i><span>${q.pos}/${N}</span></div>`:letters(q,1);
+    return `<div class="player ${i===g.cur?"cur":""} ${out?"out":""}"><b>${esc(q.name)}${g.mode==="wunsch"&&i===g.w?" 🎯":""}</b>${right}</div>`}).join("")}</div>`;
+}
+function pickView(g){
+  const w=g.p[g.w];
+  return `<div class="card"><h2 style="margin-top:0">${esc(w.name)} wünscht sich einen Trick</h2>
+  <p class="mut small">Wer ihn nicht schafft, bekommt einen Buchstaben. Schaffen ihn alle, bekommst du einen.</p></div>
+  ${diceCard("wishDie()","Oder der Würfel entscheidet (1 leicht … 6 schwer)")}
+  <div class="stack">${pool(g.level).map(t=>`<button class="pickbtn" onclick="wishPick(${t.i})">${t.r}. ${esc(t.k)}${t.s?" ⚠":""}<small style="display:block;font-weight:400;color:var(--mut);font-size:12px">${esc(t.n)}</small></button>`).join("")}</div>`;
+}
+function wishDie(){rollDie(v=>{const g=G.game;g.die=v;wishPick(pickBand(pool(g.level),v).i)})}
+function wishPick(i){
+  const g=G.game;g.trick=TRICKS[i];g.phase="try";g.nf=0;g.ns=0;
+  g.queue=g.p.map((q,k)=>k).filter(k=>k!==g.w&&g.p[k].f<WORD.length);
+  g.cur=g.queue[0];render();
+}
+function bodyView(g){
+  if(g.mode==="wunsch"&&g.phase==="pick")return pickView(g);
+  if(!g.trick)return diceCard("rollTurn()");
+  return trickCard(g.trick);
+}
+
+function render(){
+  const v=G.view;
+  if(v==="home"){
+    const hs=store.get("hs",{});
+    app.innerHTML=`<div class="hero"><div class="logo">Freestyle<b>Moves</b></div><p class="mut" style="margin-top:12px">Das Trampolin-Trickspiel für den Sportunterricht.</p></div>${nav()}
+    <div class="card"><h2 style="margin-top:0">Schwierigkeit</h2>${levelButtons()}
+    ${G.level!=="leicht"?`<div class="safety" style="margin-top:12px">Schwere Stufen nur mit Lehrkraft, Matten und passender Sicherung.</div>`:""}</div>
+    <div class="card"><h2 style="margin-top:0">Einzelspiel: Trickauswahl</h2>${orderButtons()}</div>
+    <div class="stack"><button class="pri" onclick="startSolo()">Einzelspiel (Rekordjagd)</button><button onclick="go('setup')">Mehrspieler (1–4, ein Handy)</button></div>
+    <p class="mut small" style="margin-top:14px">Bestleistung ${LEVELS[G.level].n}: <b>${hs[G.level]||0}</b> Tricks in Folge</p>`;
+  }else if(v==="setup"){
+    const minP=G.mode==="aufstieg"?1:2;
+    app.innerHTML=`<div class="top"><h1>Mehrspieler</h1><button onclick="go('home')">Zurück</button></div>
+    <div class="card stack">${G.players.map((p,i)=>`<input type="text" maxlength="14" value="${esc(p)}" oninput="G.players[${i}]=this.value" aria-label="Spieler ${i+1}">`).join("")}
+    <div class="row"><button onclick="addP()" ${G.players.length>=4?"disabled":""}>+ Spieler</button><button onclick="delP()" ${G.players.length<=minP?"disabled":""}>− Spieler</button></div></div>
+    <div class="card"><h2 style="margin-top:0">Spielmodus</h2><div class="lvl">${Object.entries(MODES).map(([k,m])=>`<button class="${G.mode===k?"sel":""}" onclick="setMode('${k}')"><b>${m.n}</b><small>${m.d}</small></button>`).join("")}</div>
+    ${G.mode==="kombo"?`<div class="row" style="margin-top:12px">${[2,3].map(n=>`<button class="${G.klen===n?"pri":""}" onclick="G.klen=${n};render()">${n} Tricks</button>`).join("")}</div>`:""}
+    ${G.mode==="klassik"?orderButtons():""}</div>
+    <div class="card"><h2 style="margin-top:0">Schwierigkeit</h2>${levelButtons()}</div>
+    <p class="mut small">${G.mode==="klassik"||G.mode==="kombo"?`Bei jedem Fehler gibt es einen Buchstaben von <b>${WORD}</b>. Wer das ganze Wort hat, scheidet aus. Wer zuletzt übrig bleibt, gewinnt.`:G.mode==="aufstieg"?"Jede Person arbeitet die Liste von Runde 1 an ab. Du kommst nur weiter, wenn du den Trick schaffst. Wer zuerst am Ende ist, gewinnt.":`Reihum wünscht sich jemand einen Trick. Wer ihn nicht schafft, bekommt einen Buchstaben von <b>${WORD}</b>. Schaffen ihn alle, bekommt die wünschende Person einen.`}</p>
+    <button class="pri" onclick="startMulti()">Spiel starten</button>`;
+  }else if(v==="play"){
+    const g=G.game;
+    if(g.solo){
+      app.innerHTML=`<div class="top"><span class="tag">Einzelspiel · ${LEVELS[g.level].n}</span><button onclick="quit()">Beenden</button></div>
+      <div class="card"><p class="mut small">Aktuelle Serie</p><div class="big">${g.streak}</div><p class="mut small" style="text-align:center">Fehlversuche: ${g.fails}/${WORD.length}</p>${letters({f:g.fails}).replace('class="letters"','class="letters" style="justify-content:center"')}</div>${bodyView(g)}`;
+    }else{
+      let who;
+      if(g.mode==="wunsch")who=g.phase==="pick"?"":`<b style="color:var(--tx)">${esc(g.p[g.w].name)}</b> wünscht sich den Trick · dran ist <b style="color:var(--tx)">${esc(g.p[g.cur].name)}</b>`;
+      else who=`Dran ist <b style="color:var(--tx)">${esc(g.p[g.cur].name)}</b>`;
+      app.innerHTML=`<div class="top"><span class="tag">${MODES[g.mode].n} · ${LEVELS[g.level].n}</span><button onclick="quit()">Beenden</button></div>
+      ${board(g)}${who?`<p style="margin:14px 0 0" class="mut">${who}</p>`:""}${bodyView(g)}`;
+    }
+  }else if(v==="end"){
+    const g=G.game;
+    let rank="";
+    if(!g.solo&&g.mode==="aufstieg"){
+      const N=pool(g.level).length;
+      rank=`<div class="stack" style="margin-top:12px">${[...g.p].sort((a,b)=>b.pos-a.pos).map((q,i)=>`<div class="player"><b>${i+1}. ${esc(q.name)}</b><span class="mut small">${q.pos}/${N} · ${q.tries} Versuche</span></div>`).join("")}</div>`;
+    }
+    app.innerHTML=`<h1>${g.solo?"Spiel vorbei":"Gewonnen!"}</h1><div class="card" style="text-align:center">${g.solo?`<p class="mut">Tricks in Folge</p><div class="big">${g.best}</div>${g.newHs?`<p><b style="color:var(--acc)">Neue Bestleistung!</b></p>`:""}`:`<div class="big" style="font-size:38px">${esc(g.winner)}</div><p class="mut">${g.mode==="aufstieg"?"hat die Liste als Erste geschafft.":"bleibt als Letzte/r übrig."}</p>${rank}`}</div>
+    <div class="stack"><button class="pri" onclick="again()">Nochmal</button><button onclick="go('home')">Zum Menü</button></div>`;
+  }else if(v==="guide"){
+    const list=TRICKS.filter(t=>G.filter==="alle"||t.l===G.filter);
+    app.innerHTML=`<h1>Anleitung</h1>${nav()}
+    <div class="row" style="flex-wrap:wrap;margin-bottom:6px">${["alle",...Object.keys(LEVELS)].map(k=>`<button style="padding:8px;font-size:13px;${G.filter===k?"background:var(--acc);color:#141200":""}" onclick="G.filter='${k}';render()">${k==="alle"?"Alle":LEVELS[k].n}</button>`).join("")}</div>
+    ${list.map(t=>`<details ontoggle="tg(this,'${t.i}')"><summary>${esc(t.k)} <span class="tag ${t.s?"w":""}">${LEVELS[t.l].n} · ${t.r}</span>${t.k!==t.n?`<span class="sub" style="display:block;margin:3px 0 0">${esc(t.n)}</span>`:""}</summary>${trickBox(t)}</details>`).join("")}`;
+  }else if(v==="info"){
+    app.innerHTML=`<h1>Hinweise</h1>${nav()}
+    <div class="card stack"><div class="safety"><b>Sicherheit zuerst.</b> Übe nur Tricks, die du sicher beherrschst. Nur mit Aufsicht, ausreichend Matten, ordentlicher Randsicherung und Abstand zum Trampolinrand. Saltos, Flick, Rondat und Handstützüberschlag nur mit Lehrkraft und passender Sicherung. Tricks mit Warnzeichen darf jede Person ohne Nachteil auslassen.</div>
+    <p><b>Klassik:</b> Fehler = Buchstabe von ${WORD}. Wer alle Buchstaben hat, ist raus.</p>
+    <p><b>Aufstieg:</b> Jede Person geht die Liste in ihrem Tempo durch. Wer zuerst am Ende ist, gewinnt.</p>
+    <p><b>Wunschtrick:</b> Reihum wünscht sich jemand einen Trick aus der Stufe oder lässt würfeln.</p>
+    <p><b>Kombo:</b> Zwei oder drei Tricks hintereinander, die Animation zeigt die ganze Kette.</p>
+    <p><b>Würfel:</b> 1 bedeutet leichte, 6 die schwersten Tricks der gewählten Stufe.</p>
+    <p><b>Animationen:</b> Die Strichmännchen zeigen den Ablauf grob von der Seite. Sie ersetzen kein Vormachen und keine Hilfestellung.</p>
+    <p class="mut small">Tricklisten nach den analogen Arbeitsblättern Easy, Medium, Hard und Turn 10.</p></div>`;
+  }
+  window.scrollTo(0,0);
+}
+function addP(){G.players.push("Spieler "+(G.players.length+1));render()}
+function delP(){G.players.pop();render()}
+function startSolo(){G.game={solo:true,mode:"klassik",level:G.level,deck:[],i:0,streak:0,best:0,fails:0};nextTrick();G.view="play";render()}
+function startMulti(){
+  const names=G.players.map((n,i)=>(n||"").trim()||"Spieler "+(i+1));
+  const g=G.game={solo:false,mode:G.mode,level:G.level,deck:[],i:0,cur:0,w:0,phase:"pick",p:names.map(n=>({name:n,f:0,pos:0,tries:0,sk:0}))};
+  if(g.mode==="aufstieg")g.trick=pool(g.level)[0];
+  else if(g.mode==="wunsch")g.trick=null;
+  else nextTrick();
+  G.view="play";render();
+}
+function skip(){
+  const g=G.game;
+  if(g.mode==="aufstieg"){const q=g.p[g.cur];q.pos++;q.sk++;return afterUp(g)}
+  if(g.mode==="wunsch")return ansWish(g,false,true);
+  nextTrick();render();
+}
+function quit(){if(confirm("Spiel wirklich beenden?"))go("home")}
+function again(){G.game.solo?startSolo():startMulti()}
+function afterUp(g){
+  const N=pool(g.level).length,q=g.p[g.cur];
+  if(q.pos>=N){g.winner=q.name;G.view="end";render();return}
+  g.cur=(g.cur+1)%g.p.length;g.trick=pool(g.level)[g.p[g.cur].pos];render();
+}
+function ansWish(g,ok,skipped){
+  const k=g.queue.shift();
+  if(!skipped){if(ok)g.ns++;else{g.p[k].f++;g.nf++}}
+  if(g.queue.length){g.cur=g.queue[0];render();return}
+  if(!g.nf&&g.ns)g.p[g.w].f++;
+  const al=g.p.filter(q=>q.f<WORD.length);
+  if(al.length<=1){
+    g.winner=al.length?al[0].name:[...g.p].sort((a,b)=>a.f-b.f)[0].name;
+    G.view="end";render();return;
+  }
+  let n=g.w;do{n=(n+1)%g.p.length}while(g.p[n].f>=WORD.length);
+  g.w=n;g.cur=n;g.phase="pick";g.trick=null;g.die=null;render();
+}
+function answer(ok){
+  const g=G.game;
+  if(g.solo){
+    if(ok){g.streak++;g.best=Math.max(g.best,g.streak)}else{g.fails++;g.streak=0}
+    if(g.fails>=WORD.length){
+      const hs=store.get("hs",{});g.newHs=g.best>(hs[g.level]||0);if(g.newHs){hs[g.level]=g.best;store.set("hs",hs)}
+      G.view="end";render();return;
+    }
+  }else if(g.mode==="aufstieg"){
+    const q=g.p[g.cur];q.tries++;if(ok)q.pos++;return afterUp(g);
+  }else if(g.mode==="wunsch"){
+    return ansWish(g,ok,false);
+  }else{
+    if(!ok)g.p[g.cur].f++;
+    const alive=g.p.filter(q=>q.f<WORD.length);
+    if(alive.length===1){g.winner=alive[0].name;G.view="end";render();return}
+    let n=g.cur;do{n=(n+1)%g.p.length}while(g.p[n].f>=WORD.length);g.cur=n;
+  }
+  nextTrick();render();
+}
+render();
+if("serviceWorker" in navigator&&location.protocol.startsWith("http"))navigator.serviceWorker.register("sw.js").catch(()=>{});
+</script>
+</body>
+</html>
